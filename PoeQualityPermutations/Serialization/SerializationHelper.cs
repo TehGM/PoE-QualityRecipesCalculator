@@ -15,6 +15,7 @@ namespace TehGM.PoeQualityPermutations.Serialization
         {
             SerializerSettings = new JsonSerializerSettings();
             SerializerSettings.Converters.Add(new ColorConverter());
+            SerializerSettings.Converters.Add(new ItemPropertiesConverter());
             SerializerSettings.Formatting = Formatting.None;
 
             DefaultSerializer = JsonSerializer.CreateDefault(SerializerSettings);

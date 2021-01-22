@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using Newtonsoft.Json;
 
 namespace TehGM.PoeQualityPermutations
@@ -30,6 +31,10 @@ namespace TehGM.PoeQualityPermutations
         public int Level { get; private set; }
         [JsonProperty("descrText")]
         public string Description { get; private set; }
+        [JsonProperty("frameType")]
+        public int FrameType { get; private set; }
+        [JsonProperty("properties")]
+        public IReadOnlyDictionary<string, ItemProperty> Properties { get; private set; }
 
         public override string ToString()
         {
