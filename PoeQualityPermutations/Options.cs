@@ -19,5 +19,8 @@ namespace TehGM.PoeQualityPermutations
         public bool OnlyValid { get; set; }
         [Option("item-names", Required = false, HelpText = "Makes app output item names along with qualities", Default = false)]
         public bool ShowItemNames { get; set; }
+
+        [Option("debug", Required = false, HelpText = "Enables debug output", Default = false)]
+        public bool Debug { get; set; }
     }
 }

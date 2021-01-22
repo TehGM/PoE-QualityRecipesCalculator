@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommandLine;
 using Serilog;
+using Serilog.Events;
 
 namespace TehGM.PoeQualityPermutations
 {
@@ -13,14 +14,16 @@ namespace TehGM.PoeQualityPermutations
 
         static async Task Main(string[] args)
         {
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo.Console()
-                .MinimumLevel.Debug()
-                .CreateLogger();
-
             await Parser.Default.ParseArguments<Options>(args).WithParsedAsync(async (options) =>
             {
                 _options = options;
+
+                Log.Logger = new LoggerConfiguration()
+                    .WriteTo.Console()
+                    .MinimumLevel.Is(_options.Debug ? LogEventLevel.Debug : LogEventLevel.Information)
+                    .CreateLogger();
+
+                Log.Information("Downloading stash data, please wait");
                 using PoeHttpClient client = new PoeHttpClient(options.SessionID, options.AccountName);
                 client.Realm = options.Realm;
                 IEnumerable<StashTab> tabs = await client.GetStashTabsAsync(options.League).ConfigureAwait(false);
