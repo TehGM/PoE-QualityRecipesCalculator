@@ -1,4 +1,6 @@
 # Quality Recipes Calculator for Path of Exile
+[![GitHub top language](https://img.shields.io/github/languages/top/TehGM/Wolfringo)](https://github.com/TehGM/Wolfringo) [![GitHub](https://img.shields.io/github/license/TehGM/Wolfringo)](LICENSE) [![GitHub issues](https://img.shields.io/github/issues/TehGM/Wolfringo)](https://github.com/TehGM/Wolfringo/issues)
+
 This is a simple terminal application that will scan Stash tabs, and output a list of possible combinations for quality vendor recipes.
 
 I made this application mostly for myself - I tend to hoard quality flasks and gems for vendor recipes, but only sell if I can get exact 40% quality sum. And I got tired of looking at my tab and trying to do math in my head. And I can program, so decided to make use of that.
@@ -33,3 +35,8 @@ There are a few arguments to provide to the application:
 
 ##### Tip!
 You can also run `QualityRecipesCalculator --help` to list all supported switches and their default values.
+
+## License
+Copyright (c) 2021 TehGM 
+
+Licensed under [Mozilla Public License 2.0](LICENSE).

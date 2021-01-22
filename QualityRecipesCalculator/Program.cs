@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommandLine;
+using CommandLine.Text;
 using Serilog;
 using Serilog.Events;
 
@@ -18,6 +19,9 @@ namespace TehGM.PoE.QualityRecipesCalculator
                     .WriteTo.Console()
                     .MinimumLevel.Is(options.Debug ? LogEventLevel.Debug : LogEventLevel.Information)
                     .CreateLogger();
+
+                Log.Information(HeadingInfo.Default);
+                Log.Information(CopyrightInfo.Default);
 
                 // output args info
                 Log.Information("Account name: {AccountName}", options.AccountName);
