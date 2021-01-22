@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TehGM.PoeQualityPermutations
+namespace TehGM.PoE.QualityRecipesCalculator
 {
     class StashRequestParams
     {

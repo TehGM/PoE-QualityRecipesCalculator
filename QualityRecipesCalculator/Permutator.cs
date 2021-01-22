@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace TehGM.PoeQualityPermutations
+namespace TehGM.PoE.QualityRecipesCalculator
 {
     static class Permutator
     {

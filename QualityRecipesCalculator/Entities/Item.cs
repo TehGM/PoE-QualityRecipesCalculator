@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using Newtonsoft.Json;
 
-namespace TehGM.PoeQualityPermutations
+namespace TehGM.PoE.QualityRecipesCalculator
 {
     [DebuggerDisplay("PoE " + nameof(Item) + ": {ToString(),nq}")]
     class Item

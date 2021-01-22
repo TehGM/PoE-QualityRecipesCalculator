@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace TehGM.PoeQualityPermutations.Serialization
+namespace TehGM.PoE.QualityRecipesCalculator.Serialization
 {
     class ItemPropertiesConverter : JsonConverter
     {

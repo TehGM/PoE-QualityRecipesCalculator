@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Serilog;
 
-namespace TehGM.PoeQualityPermutations
+namespace TehGM.PoE.QualityRecipesCalculator
 {
     class RecipesCalculator
     {

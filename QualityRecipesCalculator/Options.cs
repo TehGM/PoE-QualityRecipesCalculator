@@ -1,6 +1,6 @@
 ﻿using CommandLine;
 
-namespace TehGM.PoeQualityPermutations
+namespace TehGM.PoE.QualityRecipesCalculator
 {
     class Options
     {

@@ -5,10 +5,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Serilog;
-using TehGM.PoeQualityPermutations.Serialization;
+using TehGM.PoE.QualityRecipesCalculator.Serialization;
 using TehGM.ConsoleProgressBar;
 
-namespace TehGM.PoeQualityPermutations
+namespace TehGM.PoE.QualityRecipesCalculator
 {
     class PoeHttpClient : HttpClient
     {

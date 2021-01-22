@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TehGM.PoeQualityPermutations
+namespace TehGM.PoE.QualityRecipesCalculator
 {
     class ItemProperty
     {

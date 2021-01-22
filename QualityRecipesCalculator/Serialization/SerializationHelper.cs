@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace TehGM.PoeQualityPermutations.Serialization
+namespace TehGM.PoE.QualityRecipesCalculator.Serialization
 {
     public static class SerializationHelper
     {

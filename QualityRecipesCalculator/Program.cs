@@ -5,7 +5,7 @@ using CommandLine;
 using Serilog;
 using Serilog.Events;
 
-namespace TehGM.PoeQualityPermutations
+namespace TehGM.PoE.QualityRecipesCalculator
 {
     class Program
     {

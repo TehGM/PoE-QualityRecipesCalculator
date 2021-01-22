@@ -3,7 +3,7 @@ using System.Drawing;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace TehGM.PoeQualityPermutations.Serialization
+namespace TehGM.PoE.QualityRecipesCalculator.Serialization
 {
     public class ColorConverter : JsonConverter
     {
