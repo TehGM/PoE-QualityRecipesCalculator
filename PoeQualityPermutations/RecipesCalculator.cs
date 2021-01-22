@@ -86,7 +86,7 @@ namespace TehGM.PoeQualityPermutations
                     continue;
 
                 // determine if set should be shown
-                if (_options.OnlyValid && quality < targetQuality)
+                if (!_options.ShowInvalid && quality < targetQuality)
                     continue;
                 if (_options.OnlyExact && quality != targetQuality)
                     continue;

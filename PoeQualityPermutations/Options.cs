@@ -15,8 +15,8 @@ namespace TehGM.PoeQualityPermutations
 
         [Option("only-exact", Required = false, HelpText = "Makes app output only combinations that result in exactly 40 quality", Default = false)]
         public bool OnlyExact { get; set; }
-        [Option("only-valid", Required = false, HelpText = "Makes app output only combinations that result in at least 40 quality", Default = false)]
-        public bool OnlyValid { get; set; }
+        [Option("show-invalid", Required = false, HelpText = "Makes app output combinations that are not enough for vendor recipe", Default = false)]
+        public bool ShowInvalid { get; set; }
         [Option("item-names", Required = false, HelpText = "Makes app output item names along with qualities", Default = false)]
         public bool ShowItemNames { get; set; }
 
