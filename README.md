@@ -1,5 +1,5 @@
 # Quality Recipes Calculator for Path of Exile
-[![GitHub top language](https://img.shields.io/github/languages/top/TehGM/PoE-QualityRecipesCalculator)](https://github.com/TehGM/PoE-QualityRecipesCalculator) [![GitHub](https://img.shields.io/github/license/TehGM/PoE-QualityRecipesCalculator)](LICENSE) [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/TehGM/PoE-QualityRecipesCalculator/.NET%20Build)] [![GitHub issues](https://img.shields.io/github/issues/TehGM/PoE-QualityRecipesCalculator)](https://github.com/TehGM/PoE-QualityRecipesCalculator/issues)
+[![GitHub top language](https://img.shields.io/github/languages/top/TehGM/PoE-QualityRecipesCalculator)](https://github.com/TehGM/PoE-QualityRecipesCalculator) [![GitHub](https://img.shields.io/github/license/TehGM/PoE-QualityRecipesCalculator)](LICENSE) [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/TehGM/PoE-QualityRecipesCalculator/.NET%20Build)](https://github.com/TehGM/PoE-QualityRecipesCalculator/actions) [![GitHub issues](https://img.shields.io/github/issues/TehGM/PoE-QualityRecipesCalculator)](https://github.com/TehGM/PoE-QualityRecipesCalculator/issues)
 
 This is a simple terminal application that will scan Stash tabs, and output a list of possible combinations for quality vendor recipes.
 
