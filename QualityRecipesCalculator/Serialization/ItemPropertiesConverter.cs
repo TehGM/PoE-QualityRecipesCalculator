@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace TehGM.PoE.QualityRecipesCalculator.Serialization
 {
-    class ItemPropertiesConverter : JsonConverter
+    public class ItemPropertiesConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType)
         {

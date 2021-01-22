@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace TehGM.PoE.QualityRecipesCalculator
 {
-    static class Permutator
+    public static class Permutator
     {
         // based on
         // https://www.codeproject.com/Articles/43767/A-C-List-Permutation-Iterator

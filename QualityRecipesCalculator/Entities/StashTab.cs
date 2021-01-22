@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 namespace TehGM.PoE.QualityRecipesCalculator
 {
     [DebuggerDisplay("PoE " + nameof(StashTab) + ": {ToString(),nq}")]
-    class StashTab
+    public class StashTab
     {
         [JsonProperty("n")]
         public string Name { get; private set; }

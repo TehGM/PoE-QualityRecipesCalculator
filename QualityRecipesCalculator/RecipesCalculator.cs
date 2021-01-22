@@ -5,7 +5,7 @@ using Serilog;
 
 namespace TehGM.PoE.QualityRecipesCalculator
 {
-    class RecipesCalculator
+    public class RecipesCalculator
     {
         public readonly IEnumerable<StashTab> _stashTabs;
         public readonly Options _options;

@@ -2,7 +2,7 @@
 
 namespace TehGM.PoE.QualityRecipesCalculator
 {
-    class StashRequestParams
+    public class StashRequestParams
     {
         public string League { get; }
         public string Realm { get; }

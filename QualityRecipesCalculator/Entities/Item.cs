@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 namespace TehGM.PoE.QualityRecipesCalculator
 {
     [DebuggerDisplay("PoE " + nameof(Item) + ": {ToString(),nq}")]
-    class Item
+    public class Item
     {
         [JsonProperty("id")]
         public string ID { get; private set; }

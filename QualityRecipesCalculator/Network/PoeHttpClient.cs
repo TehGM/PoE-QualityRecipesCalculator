@@ -10,7 +10,7 @@ using TehGM.ConsoleProgressBar;
 
 namespace TehGM.PoE.QualityRecipesCalculator
 {
-    class PoeHttpClient : HttpClient
+    public class PoeHttpClient : HttpClient
     {
         public string AccountName { get; set; }
         public string Realm { get; set; } = "pc";

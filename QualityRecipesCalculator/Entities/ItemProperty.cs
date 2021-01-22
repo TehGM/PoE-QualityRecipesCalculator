@@ -2,7 +2,7 @@
 
 namespace TehGM.PoE.QualityRecipesCalculator
 {
-    class ItemProperty
+    public class ItemProperty
     {
         public string Name { get; }
         public IEnumerable<string> Values { get; }
