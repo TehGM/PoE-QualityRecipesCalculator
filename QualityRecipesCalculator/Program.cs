@@ -20,6 +20,7 @@ namespace TehGM.PoE.QualityRecipesCalculator
                     .WriteTo.Console()
                     .MinimumLevel.Is(options.Debug ? LogEventLevel.Debug : LogEventLevel.Information)
                     .CreateLogger();
+                AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
 
                 Log.Information(HeadingInfo.Default);
                 Log.Information(CopyrightInfo.Default);
@@ -32,18 +33,52 @@ namespace TehGM.PoE.QualityRecipesCalculator
                 // download all stash data
                 using PoeHttpClient client = new PoeHttpClient(options.SessionID, options.AccountName);
                 client.Realm = options.Realm;
-                IEnumerable<StashTab> tabs = await client.GetStashTabsAsync(options.League).ConfigureAwait(false);
+                IEnumerable<StashTab> tabs;
+                try
+                {
+                    tabs = await client.GetStashTabsAsync(options.League).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    if (options.Debug)
+                        Log.Fatal(ex, "Failed downloading stash data");
+                    else
+                        Log.Fatal("Failed downloading stash data: {Message}", ex.Message);
+                    return;
+                }
 
                 // calculate and output results
-                RecipesCalculator calculator = new RecipesCalculator(tabs, options);
-                calculator.CheckGlassblowersBaubleRecipe();
-                calculator.CheckGemcuttersPrismRecipe();
+                try
+                {
+                    RecipesCalculator calculator = new RecipesCalculator(tabs, options);
+                    calculator.CheckGlassblowersBaubleRecipe();
+                    calculator.CheckGemcuttersPrismRecipe();
+                }
+                catch (Exception ex)
+                {
+                    if (options.Debug)
+                        Log.Fatal("Failed calculating vendor recipes: {Message}", ex.Message);
+                    else
+                        Log.Fatal(ex, "Failed calculating vendor recipes");
+                    return;
+                }
             });
             if (Debugger.IsAttached)
             {
                 Log.Information("Done. Press enter to exit...");
                 Console.ReadLine();
             }
+            Log.CloseAndFlush();
+        }
+
+        private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            try
+            {
+                Log.Logger.Fatal((Exception)e.ExceptionObject, "An exception was unhandled");
+                Log.CloseAndFlush();
+            }
+            catch { }
         }
     }
 }
