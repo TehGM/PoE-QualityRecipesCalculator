@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using CommandLine;
 using CommandLine.Text;
@@ -38,9 +39,11 @@ namespace TehGM.PoE.QualityRecipesCalculator
                 calculator.CheckGlassblowersBaubleRecipe();
                 calculator.CheckGemcuttersPrismRecipe();
             });
-            Log.Information("Done");
-            Console.ReadLine();
+            if (Debugger.IsAttached)
+            {
+                Log.Information("Done. Press enter to exit...");
+                Console.ReadLine();
+            }
         }
-
     }
 }
