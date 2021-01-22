@@ -23,7 +23,10 @@ namespace TehGM.PoeQualityPermutations
                     .MinimumLevel.Is(_options.Debug ? LogEventLevel.Debug : LogEventLevel.Information)
                     .CreateLogger();
 
-                Log.Information("Downloading stash data, please wait");
+                Log.Information("Account name: {AccountName}", options.AccountName);
+                Log.Information("League: {League}", options.League);
+                Log.Information("Realm: {Realm}", options.Realm);
+
                 using PoeHttpClient client = new PoeHttpClient(options.SessionID, options.AccountName);
                 client.Realm = options.Realm;
                 IEnumerable<StashTab> tabs = await client.GetStashTabsAsync(options.League).ConfigureAwait(false);

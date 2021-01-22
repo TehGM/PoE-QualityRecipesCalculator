@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Serilog;
 using TehGM.PoeQualityPermutations.Serialization;
+using TehGM.ConsoleProgressBar;
 
 namespace TehGM.PoeQualityPermutations
 {
@@ -24,6 +25,10 @@ namespace TehGM.PoeQualityPermutations
 
         public async Task<IEnumerable<StashTab>> GetStashTabsAsync(string league, CancellationToken cancellationToken = default)
         {
+            ProgressBar progress = new ProgressBar("Downloading stash data...");
+            progress.Start();
+            progress.Update(0);
+
             // prepare request
             Log.Debug("Requesting stash tabs info for account {Account} in league {League}", AccountName, league);
             Dictionary<string, object> query = new Dictionary<string, object>(5)
@@ -45,11 +50,14 @@ namespace TehGM.PoeQualityPermutations
             Log.Verbose("Parsing stash info");
             JObject data = JObject.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
             StashTab[] tabs = data["tabs"].ToObject<StashTab[]>(SerializationHelper.DefaultSerializer);
-            foreach (StashTab tab in tabs)
+            for (int i = 0; i < tabs.Length; i++)
             {
+                progress.Update(i, tabs.Length);
+                StashTab tab = tabs[i];
                 JToken items = await GetStashTabContentsInternalAsync(league, tab.Index, cancellationToken).ConfigureAwait(false);
                 items.PopulateObject(tab);
             }
+            progress.Update(tabs.Length, tabs.Length, "Stash data download complete.");
             Log.Verbose("Done parsing stash info");
             return tabs;
         }
