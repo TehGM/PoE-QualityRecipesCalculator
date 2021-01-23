@@ -12,7 +12,10 @@
     <Copyright>Copyright (c) 2021 TehGM</Copyright>
     <RepositoryUrl>https://github.com/TehGM/PoE-QualityRecipesCalculator</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
+    <PackageReleaseNotes>- Override window title to hide args and increase security.
+- Stop showing same qualities in different order as different combinations.
+- Minor performance tweaks.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
