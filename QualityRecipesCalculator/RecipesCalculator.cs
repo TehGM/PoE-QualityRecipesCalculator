@@ -54,41 +54,28 @@ namespace TehGM.PoE.QualityRecipesCalculator
         private void CheckRecipe(IEnumerable<Item> items, StashTab tab, int targetQuality = 40)
         {
             // prepare qualities and combinations
-            IReadOnlyDictionary<Item, int> qualities = ExtractItemQualities(items);
+            IReadOnlyDictionary<Item, int> qualities = RecipeCombination.ExtractItemQualities(items);
             Log.Verbose("Generating permutations");
             IEnumerable<IEnumerable<KeyValuePair<Item, int>>> permutations = Permutator.GetCombinations(qualities);
 
             // track already done just to reduce spam in output
-            HashSet<string> alreadyDone = new HashSet<string>(permutations.Count(), StringComparer.Ordinal);
+            HashSet<RecipeCombination> alreadyDone = new HashSet<RecipeCombination>(permutations.Count());
             // only output tab name the first time
             bool tabNameShown = false;
-            // track current set of items for purpose of displaying
-            IDictionary<Item, int> currentSet = new Dictionary<Item, int>(5);
 
             // calculate total quality of each combination
             foreach (IEnumerable<KeyValuePair<Item, int>> sequence in permutations)
             {
-                currentSet.Clear();
-                int quality = 0;
-                foreach (KeyValuePair<Item, int> q in sequence)
-                {
-                    quality += q.Value;
-                    currentSet.Add(q);
-
-                    // skip calculating further if target qualit was reached
-                    if (quality >= targetQuality)
-                        break;
-                }
+                RecipeCombination combination = RecipeCombination.Calculate(sequence, targetQuality);
 
                 // ensure this set wasn't already calculated, based just on items qualities
-                string key = string.Join(", ", currentSet.Select(q => $"+{q.Value}%"));
-                if (!alreadyDone.Add(key))
+                if (!alreadyDone.Add(combination))
                     continue;
 
                 // determine if set should be shown
-                if (!_options.ShowInvalid && quality < targetQuality)
+                if (!_options.ShowInvalid && combination.TotalQuality < targetQuality)
                     continue;
-                if (_options.OnlyExact && quality != targetQuality)
+                if (_options.OnlyExact && combination.TotalQuality != targetQuality)
                     continue;
 
                 // for the first item in set, notify user what tab it's in
@@ -99,33 +86,20 @@ namespace TehGM.PoE.QualityRecipesCalculator
                 }
 
                 // output the set and total quality
-                Console.Write(key + ": ");
+                Console.Write(combination.ToString() + ": ");
                 ConsoleColor previousColor = Console.ForegroundColor;
-                if (quality == targetQuality)
+                if (combination.TotalQuality == targetQuality)
                     Console.ForegroundColor = ConsoleColor.Green;
-                else if (quality > targetQuality)
+                else if (combination.TotalQuality > targetQuality)
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
                 else
                     Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write(quality);
+                Console.Write(combination.TotalQuality);
                 Console.ForegroundColor = previousColor;
                 if (_options.ShowItemNames)
-                    Console.Write($" ({string.Join(", ", currentSet.Keys)})");
+                    Console.Write($" ({string.Join(", ", combination.Items)})");
                 Console.WriteLine();
             }
-        }
-
-        private static IReadOnlyDictionary<Item, int> ExtractItemQualities(IEnumerable<Item> items)
-        {
-            Dictionary<Item, int> results = new Dictionary<Item, int>(items.Count());
-
-            foreach (Item i in items)
-            {
-                if (!i.Properties.TryGetValue("Quality", out ItemProperty prop))
-                    throw new ArgumentException($"Item {i} has no quality property", nameof(items));
-                results.Add(i, int.Parse(prop.Values.First().TrimStart('+').TrimEnd('%')));
-            }
-            return results;
         }
     }
 }
