@@ -15,6 +15,8 @@ namespace TehGM.PoE.QualityRecipesCalculator
         {
             await Parser.Default.ParseArguments<Options>(args).WithParsedAsync(async (options) =>
             {
+                Console.Title = $"{HeadingInfo.Default} - {options.AccountName}, {options.League} league";
+
                 // initialize log
                 Log.Logger = new LoggerConfiguration()
                     .WriteTo.Console()
