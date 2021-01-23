@@ -68,14 +68,14 @@ namespace TehGM.PoE.QualityRecipesCalculator
             {
                 RecipeCombination combination = RecipeCombination.Calculate(sequence, targetQuality);
 
-                // ensure this set wasn't already calculated, based just on items qualities
-                if (!alreadyDone.Add(combination))
-                    continue;
-
                 // determine if set should be shown
                 if (!_options.ShowInvalid && combination.TotalQuality < targetQuality)
                     continue;
                 if (_options.OnlyExact && combination.TotalQuality != targetQuality)
+                    continue;
+
+                // ensure this set wasn't already calculated, based just on items qualities
+                if (!alreadyDone.Add(combination))
                     continue;
 
                 // for the first item in set, notify user what tab it's in
