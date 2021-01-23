@@ -15,11 +15,19 @@
     <Version>1.0.1</Version>
     <PackageReleaseNotes>- Override window title to hide args and increase security.
 - Stop showing same qualities in different order as different combinations.
+- Added app icon.
 - Minor performance tweaks.</PackageReleaseNotes>
+    <PackageIcon>icon.png</PackageIcon>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <PackageTags>poe, pathofexile</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Permutator.cs~RF1bc4443f.TMP" />
+    <None Include="..\icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
