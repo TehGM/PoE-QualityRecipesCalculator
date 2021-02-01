@@ -58,7 +58,7 @@ namespace TehGM.PoE.QualityRecipesCalculator
                 }
                 catch (Exception ex)
                 {
-                    if (options.Debug)
+                    if (!options.Debug)
                         Log.Fatal("Failed calculating vendor recipes: {Message}", ex.Message);
                     else
                         Log.Fatal(ex, "Failed calculating vendor recipes");
