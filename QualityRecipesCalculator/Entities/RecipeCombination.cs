@@ -45,7 +45,7 @@ namespace TehGM.PoE.QualityRecipesCalculator
 
             foreach (Item i in items)
             {
-                if (!i.Properties.TryGetValue("Quality", out ItemProperty prop))
+                if (!i.TryGetProperty("Quality", out ItemProperty prop))
                     throw new ArgumentException($"Item {i} has no quality property", nameof(items));
                 results.Add(i, int.Parse(prop.Values.First().TrimStart('+').TrimEnd('%')));
             }

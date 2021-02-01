@@ -34,7 +34,7 @@ namespace TehGM.PoE.QualityRecipesCalculator
         [JsonProperty("frameType")]
         public int FrameType { get; private set; }
         [JsonProperty("properties")]
-        public IReadOnlyDictionary<string, ItemProperty> Properties { get; private set; }
+        public IEnumerable<ItemProperty> Properties { get; private set; }
 
         public override string ToString()
         {

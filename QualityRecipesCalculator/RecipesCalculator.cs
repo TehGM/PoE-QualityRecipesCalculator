@@ -25,8 +25,8 @@ namespace TehGM.PoE.QualityRecipesCalculator
                 // flasks can have frame type 0, 1 or 3. They also always have "Consumes {0} of {1} Charges on use" as one of properties
                 // also we're only interested in flasks with quality
                 IEnumerable<Item> items = tab.Items.Where(i => (i.FrameType == 0 || i.FrameType == 1 || i.FrameType == 3)
-                    && i.Properties?.ContainsKey("Consumes {0} of {1} Charges on use") == true
-                    && i.Properties?.ContainsKey("Quality") == true);
+                    && i.TryGetProperty("Consumes {0} of {1} Charges on use", out _)
+                    && i.TryGetProperty("Quality", out _));
                 if (!items.Any())
                     continue;
                 Log.Debug("Found valid items in tab {TabName}, checking qualities", tab.Name);
@@ -43,7 +43,7 @@ namespace TehGM.PoE.QualityRecipesCalculator
                 // gems always have frame type of 4
                 // also we're only interested in gems with quality
                 IEnumerable<Item> items = tab.Items.Where(i => i.FrameType == 4
-                    && i.Properties?.ContainsKey("Quality") == true);
+                    && i.TryGetProperty("Quality", out _));
                 if (!items.Any())
                     continue;
                 Log.Debug("Found valid items in tab {TabName}, checking qualities", tab.Name);
