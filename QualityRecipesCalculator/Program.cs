@@ -20,7 +20,9 @@ namespace TehGM.PoE.QualityRecipesCalculator
                 // initialize log
                 Log.Logger = new LoggerConfiguration()
                     .WriteTo.Console()
-                    .MinimumLevel.Is(options.Debug ? LogEventLevel.Debug : LogEventLevel.Information)
+                    .MinimumLevel.Is(options.Debug ? 
+                        (Debugger.IsAttached ? LogEventLevel.Verbose : LogEventLevel.Debug) 
+                        : LogEventLevel.Information)
                     .CreateLogger();
                 AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
 
