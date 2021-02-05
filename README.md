@@ -31,10 +31,14 @@ There are a few arguments to provide to the application:
 - `--only-exact` - *Optional* - By default, the app outputs combinations that have total 40% quality or more. Adding this flag makes the app output __only__ the combinations that have total quality equal __exactly__ 40%.
 - `--show-invalid` - *Optional* - By default, the app will not output combinations that have total quality below 40%. Adding this flag makes the app output them as well.
 - `--item-names` - *Optional* - By default, the app will only show only the quality of each item in combination. Adding this flag will output the example item names as well for easier finding. *Warning: it might make the app output less readable*.
+- `--large <Count>` - *Optional* - Defines the count of items to consider a large batch and display a performance warning. Defaults to 20.
 - `--debug` - *Optional* - Makes the app output debug logs.
 
 ##### Tip!
 You can also run `QualityRecipesCalculator --help` to list all supported switches and their default values.
+
+#### Known Issues
+Current algorithm isn't very performant when a large amount of valid items is found in a single stash tab. I am still looking at ways to improve its perfromance - any contributions or suggestions are most welcome.
 
 ## License
 Copyright (c) 2021 TehGM 
