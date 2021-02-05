@@ -33,18 +33,23 @@ namespace TehGM.PoE.QualityRecipesCalculator
 
         // based on
         // https://stackoverflow.com/questions/52863636/c-sharp-all-unique-combinations-of-liststring
-        public static IEnumerable<IEnumerable<T>> GetCombinations<T>(IEnumerable<T> sequence)
+        public static IEnumerable<IEnumerable<T>> GetCombinations<T>(IEnumerable<T> sequence, int maxItems = 60)
         {
             if (sequence.Count() == 1)
                 yield return sequence;
             else
             {
-                var head = sequence.First();
-                var tail = sequence.Skip(1);
-                foreach (var s in GetCombinations(tail))
+                T head = sequence.First();
+                IEnumerable<T> tail = sequence.Skip(1);
+                foreach (IEnumerable<T> s in GetCombinations(tail))
                 {
-                    yield return s; // Without first
-                    yield return s.Prepend(head);
+                    int count = s.Count();
+                    if (count <= maxItems)
+                        yield return s; // Without first
+                    else 
+                        continue;
+                    if (count + 1 <= maxItems)
+                        yield return s.Prepend(head);
                 }
             }
         }

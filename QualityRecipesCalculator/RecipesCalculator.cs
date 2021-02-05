@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Serilog;
 
@@ -7,13 +8,15 @@ namespace TehGM.PoE.QualityRecipesCalculator
 {
     public class RecipesCalculator
     {
-        public readonly IEnumerable<StashTab> _stashTabs;
-        public readonly Options _options;
+        private readonly IEnumerable<StashTab> _stashTabs;
+        private readonly Options _options;
+        private readonly Stopwatch _stopwatch;
 
         public RecipesCalculator(IEnumerable<StashTab> stashTabs, Options options)
         {
             this._stashTabs = stashTabs;
             this._options = options;
+            this._stopwatch = new Stopwatch();
         }
 
         public void CheckGlassblowersBaubleRecipe()
@@ -29,8 +32,11 @@ namespace TehGM.PoE.QualityRecipesCalculator
                     && i.TryGetProperty("Quality", out _));
                 if (!items.Any())
                     continue;
-                Log.Debug("Found valid items in tab {TabName}, checking qualities", tab.Name);
-                CheckRecipe(items, tab);
+                Log.Debug("Found {Count} valid items in tab {TabName}, checking qualities", items.Count(), tab.Name);
+                CheckRecipe(items, tab, new CombinationRequirements()
+                {
+                    MaxItems = 30
+                });
             }
         }
 
@@ -46,32 +52,36 @@ namespace TehGM.PoE.QualityRecipesCalculator
                     && i.TryGetProperty("Quality", out _));
                 if (!items.Any())
                     continue;
-                Log.Debug("Found valid items in tab {TabName}, checking qualities", tab.Name);
-                CheckRecipe(items, tab);
+                Log.Debug("Found {Count} valid items in tab {TabName}, checking qualities", items.Count(), tab.Name);
+                CheckRecipe(items, tab, new CombinationRequirements());
             }
         }
 
-        private void CheckRecipe(IEnumerable<Item> items, StashTab tab, int targetQuality = 40)
+        private void CheckRecipe(IEnumerable<Item> items, StashTab tab, CombinationRequirements requirements)
         {
+            LogLargeWarning(items.Count(), tab.Name);
+            this._stopwatch.Restart();
+
             // prepare qualities and combinations
             IReadOnlyDictionary<Item, int> qualities = RecipeCombination.ExtractItemQualities(items);
             Log.Verbose("Generating permutations");
-            IEnumerable<IEnumerable<KeyValuePair<Item, int>>> permutations = Permutator.GetCombinations(qualities);
+            IEnumerable<IEnumerable<KeyValuePair<Item, int>>> permutations = Permutator.GetCombinations(qualities, requirements.MaxItems);
 
             // track already done just to reduce spam in output
-            HashSet<RecipeCombination> alreadyDone = new HashSet<RecipeCombination>(permutations.Count());
+            HashSet<RecipeCombination> alreadyDone = new HashSet<RecipeCombination>();
             // only output tab name the first time
             bool tabNameShown = false;
 
             // calculate total quality of each combination
+            Log.Verbose("Calculating combinations");
             foreach (IEnumerable<KeyValuePair<Item, int>> sequence in permutations)
             {
-                RecipeCombination combination = RecipeCombination.Calculate(sequence, targetQuality);
+                RecipeCombination combination = RecipeCombination.Calculate(sequence, requirements.TargetQuality);
 
                 // determine if set should be shown
-                if (!_options.ShowInvalid && combination.TotalQuality < targetQuality)
+                if (!_options.ShowInvalid && combination.TotalQuality < requirements.TargetQuality)
                     continue;
-                if (_options.OnlyExact && combination.TotalQuality != targetQuality)
+                if (_options.OnlyExact && combination.TotalQuality != requirements.TargetQuality)
                     continue;
 
                 // ensure this set wasn't already calculated, based just on items qualities
@@ -88,9 +98,9 @@ namespace TehGM.PoE.QualityRecipesCalculator
                 // output the set and total quality
                 Console.Write(combination.ToString() + ": ");
                 ConsoleColor previousColor = Console.ForegroundColor;
-                if (combination.TotalQuality == targetQuality)
+                if (combination.TotalQuality == requirements.TargetQuality)
                     Console.ForegroundColor = ConsoleColor.Green;
-                else if (combination.TotalQuality > targetQuality)
+                else if (combination.TotalQuality > requirements.TargetQuality)
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
                 else
                     Console.ForegroundColor = ConsoleColor.Red;
@@ -100,6 +110,20 @@ namespace TehGM.PoE.QualityRecipesCalculator
                     Console.Write($" ({string.Join(", ", combination.Items)})");
                 Console.WriteLine();
             }
+
+            Log.Verbose("Done checking stash tab {TabName} ({Time} ms)", tab.Name, this._stopwatch.ElapsedMilliseconds);
+        }
+
+        private void LogLargeWarning(int itemsCount, string tabName)
+        {
+            if (itemsCount < _options.LargeBatchSize)
+                return;
+            string message = "{Count} valid items in tab {TabName} - calculations might take a long time";
+            if (_options.ShowInvalid)
+                message += ", consider running without --show-invalid flag";
+            else if (!_options.OnlyExact)
+                message += ", consider running with --only-exact flag";
+            Log.Warning(message, itemsCount, tabName);
         }
     }
 }

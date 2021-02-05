@@ -19,6 +19,8 @@ namespace TehGM.PoE.QualityRecipesCalculator
         public bool ShowInvalid { get; set; }
         [Option("item-names", Required = false, HelpText = "Makes app output item names along with qualities", Default = false)]
         public bool ShowItemNames { get; set; }
+        [Option("large", Required = false, HelpText = "Amount of items that will be considered a large batch and produce warning", Default = 20)]
+        public uint LargeBatchSize { get; set; }
 
         [Option("debug", Required = false, HelpText = "Enables debug output", Default = false)]
         public bool Debug { get; set; }

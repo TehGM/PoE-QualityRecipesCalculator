@@ -13,6 +13,7 @@ namespace TehGM.PoE.QualityRecipesCalculator
     {
         static async Task Main(string[] args)
         {
+            Stopwatch stopwatch = new Stopwatch();
             await Parser.Default.ParseArguments<Options>(args).WithParsedAsync(async (options) =>
             {
                 Console.Title = $"{HeadingInfo.Default} - {options.AccountName}, {options.League} league";
@@ -40,7 +41,9 @@ namespace TehGM.PoE.QualityRecipesCalculator
                 IEnumerable<StashTab> tabs;
                 try
                 {
+                    stopwatch.Restart();
                     tabs = await client.GetStashTabsAsync(options.League).ConfigureAwait(false);
+                    Log.Debug("Done downloading ({Time} ms)", stopwatch.ElapsedMilliseconds);
                 }
                 catch (Exception ex)
                 {
@@ -55,8 +58,14 @@ namespace TehGM.PoE.QualityRecipesCalculator
                 try
                 {
                     RecipesCalculator calculator = new RecipesCalculator(tabs, options);
+
+                    stopwatch.Restart();
                     calculator.CheckGlassblowersBaubleRecipe();
+                    Log.Debug("Done checking Glassblower's Bauble Recipe ({Time} ms)", stopwatch.ElapsedMilliseconds);
+
+                    stopwatch.Restart();
                     calculator.CheckGemcuttersPrismRecipe();
+                    Log.Debug("Done checking Gemcutter's Prism Recipe ({Time} ms)", stopwatch.ElapsedMilliseconds);
                 }
                 catch (Exception ex)
                 {
