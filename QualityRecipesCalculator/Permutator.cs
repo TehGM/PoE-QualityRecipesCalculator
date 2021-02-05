@@ -41,12 +41,12 @@ namespace TehGM.PoE.QualityRecipesCalculator
             {
                 T head = sequence.First();
                 IEnumerable<T> tail = sequence.Skip(1);
-                foreach (IEnumerable<T> s in GetCombinations(tail))
+                foreach (IEnumerable<T> s in GetCombinations(tail, maxItems))
                 {
                     int count = s.Count();
                     if (count <= maxItems)
                         yield return s; // Without first
-                    else 
+                    else
                         continue;
                     if (count + 1 <= maxItems)
                         yield return s.Prepend(head);

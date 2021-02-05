@@ -53,7 +53,10 @@ namespace TehGM.PoE.QualityRecipesCalculator
                 if (!items.Any())
                     continue;
                 Log.Debug("Found {Count} valid items in tab {TabName}, checking qualities", items.Count(), tab.Name);
-                CheckRecipe(items, tab, new CombinationRequirements());
+                CheckRecipe(items, tab, new CombinationRequirements()
+                {
+                    MaxItems = 60
+                });
             }
         }
 
@@ -71,6 +74,11 @@ namespace TehGM.PoE.QualityRecipesCalculator
             HashSet<RecipeCombination> alreadyDone = new HashSet<RecipeCombination>();
             // only output tab name the first time
             bool tabNameShown = false;
+            // skip showing invalid if capacity is exceeded
+            bool exceedsCapacity = permutations.LongCount() > int.MaxValue / 2;
+            if (exceedsCapacity && _options.ShowInvalid)
+                Log.Warning("Possible combinations count exceed capacity - logging of invalid combinations will be disabled");
+            Log.Verbose("Permutations generated in {Time} ms", this._stopwatch.ElapsedMilliseconds);
 
             // calculate total quality of each combination
             Log.Verbose("Calculating combinations");
@@ -79,9 +87,9 @@ namespace TehGM.PoE.QualityRecipesCalculator
                 RecipeCombination combination = RecipeCombination.Calculate(sequence, requirements.TargetQuality);
 
                 // determine if set should be shown
-                if (!_options.ShowInvalid && combination.TotalQuality < requirements.TargetQuality)
-                    continue;
                 if (_options.OnlyExact && combination.TotalQuality != requirements.TargetQuality)
+                    continue;
+                if ((!_options.ShowInvalid || exceedsCapacity) && combination.TotalQuality < requirements.TargetQuality)
                     continue;
 
                 // ensure this set wasn't already calculated, based just on items qualities
@@ -119,10 +127,8 @@ namespace TehGM.PoE.QualityRecipesCalculator
             if (itemsCount < _options.LargeBatchSize)
                 return;
             string message = "{Count} valid items in tab {TabName} - calculations might take a long time";
-            if (_options.ShowInvalid)
-                message += ", consider running without --show-invalid flag";
-            else if (!_options.OnlyExact)
-                message += ", consider running with --only-exact flag";
+            if (!_options.OnlyExact)
+                message += ", consider running with --only-exact flag - might improve performance by about 30%";
             Log.Warning(message, itemsCount, tabName);
         }
     }

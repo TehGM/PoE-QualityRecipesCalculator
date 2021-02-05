@@ -15,7 +15,7 @@ namespace TehGM.PoE.QualityRecipesCalculator
         public RecipeCombination(IEnumerable<KeyValuePair<Item, int>> items)
         {
             this._items = new List<KeyValuePair<Item, int>>(items.OrderBy(i => i.Value));
-            this.TotalQuality = this.Qualities.Sum();
+            this.TotalQuality = this._items.Sum(kvp => kvp.Value);
         }
 
         public RecipeCombination(IEnumerable<Item> items)
@@ -31,7 +31,7 @@ namespace TehGM.PoE.QualityRecipesCalculator
                     quality += i.Value;
                     return true;
                 }
-                // skip calculating further if target qualit was reached
+                // skip calculating further if target quality was reached
                 return false;
             }));
         }
