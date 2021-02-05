@@ -9,21 +9,21 @@ namespace TehGM.PoE.QualityRecipesCalculator.Serialization
     {
         public override bool CanConvert(Type objectType)
         {
-            return typeof(IEnumerable<KeyValuePair<string, ItemProperty>>).IsAssignableFrom(objectType);
+            return typeof(IEnumerable<ItemProperty>).IsAssignableFrom(objectType);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             JArray jsonArray = JArray.Load(reader);
-            Dictionary<string, ItemProperty> results = new Dictionary<string, ItemProperty>(jsonArray.Count, StringComparer.OrdinalIgnoreCase);
+            List<ItemProperty> results = new List<ItemProperty>(jsonArray.Count);
             foreach (JToken obj in jsonArray)
             {
-                string name = obj["name"].Value<string>();
+                string template = obj["name"].Value<string>();
                 JArray jsonValues = obj["values"] as JArray;
                 string[] values = new string[jsonValues.Count];
                 for (int i = 0; i < jsonValues.Count; i++)
                     values[i] = jsonValues[i].First.ToString();
-                results.Add(name, new ItemProperty(name, values));
+                results.Add(new ItemProperty(template, values));
             }
             return results;
         }
