@@ -2,7 +2,7 @@
 
 namespace TehGM.PoE.QualityRecipesCalculator
 {
-    public class Options
+    public class TerminalOptions
     {
         [Option('s', "sessionid", Required = true, HelpText = "PoE Session ID")]
         public string SessionID { get; set; }

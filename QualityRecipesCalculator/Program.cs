@@ -14,7 +14,7 @@ namespace TehGM.PoE.QualityRecipesCalculator
         static async Task Main(string[] args)
         {
             Stopwatch stopwatch = new Stopwatch();
-            await Parser.Default.ParseArguments<Options>(args).WithParsedAsync(async (options) =>
+            await Parser.Default.ParseArguments<TerminalOptions>(args).WithParsedAsync(async (options) =>
             {
                 Console.Title = $"{HeadingInfo.Default} - {options.AccountName}, {options.League} league";
 

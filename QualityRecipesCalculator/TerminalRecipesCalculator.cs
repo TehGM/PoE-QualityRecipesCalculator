@@ -10,13 +10,13 @@ namespace TehGM.PoE.QualityRecipesCalculator
     public class TerminalRecipesCalculator
     {
         private readonly IEnumerable<StashTab> _stashTabs;
-        private readonly Options _options;
+        private readonly TerminalOptions _options;
         private readonly Stopwatch _stopwatch;
 
         private readonly IRecipeCalculator _glassblowersBaubleCalculator;
         private readonly IRecipeCalculator _gemcuttersPrismCalculator;
 
-        public TerminalRecipesCalculator(IEnumerable<StashTab> stashTabs, Options options)
+        public TerminalRecipesCalculator(IEnumerable<StashTab> stashTabs, TerminalOptions options)
         {
             this._stashTabs = stashTabs;
             this._options = options;
