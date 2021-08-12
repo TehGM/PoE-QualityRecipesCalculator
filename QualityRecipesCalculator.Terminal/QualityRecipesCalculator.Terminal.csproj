@@ -6,7 +6,7 @@
     <RootNamespace>TehGM.PoE.QualityRecipesCalculator</RootNamespace>
     <PackageId>TehGM.PoE.QualityRecipesCalculator</PackageId>
     <Authors>TehGM</Authors>
-    <Product>Quality Recipes Calculator</Product>
+    <Product>Quality Recipes Calculator - Terminal Tool</Product>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/TehGM/PoE-QualityRecipesCalculator</PackageProjectUrl>
     <Copyright>Copyright (c) 2021 TehGM</Copyright>

@@ -3,6 +3,16 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>TehGM.PoE.QualityRecipesCalculator</RootNamespace>
+    <Authors>TehGM</Authors>
+    <Product>Quality Recipes Calculator - Core Lib</Product>
+    <PackageId>TehGM.PoE.QualityRecipesCalculator</PackageId>
+    <PackageProjectUrl>https://github.com/TehGM/PoE-QualityRecipesCalculator</PackageProjectUrl>
+    <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
+    <Copyright>Copyright (c) 2021 TehGM</Copyright>
+    <RepositoryUrl>https://github.com/TehGM/PoE-QualityRecipesCalculator</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>poe, pathofexile</PackageTags>
+    <Version>1.0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
