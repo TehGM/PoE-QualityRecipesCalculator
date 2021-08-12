@@ -76,7 +76,7 @@ namespace TehGM.PoE.QualityRecipesCalculator
 
             bool showPerfect = result.PerfectCombinations?.Any() == true;
             bool showValid = !_options.OnlyExact && result.ValidCombinations?.Any() == true;
-            bool showInvalid = _options.ShowInvalid && result.InvalidCombinations?.Any() == true;
+            bool showInvalid = _options.ShowInvalid && result.InvalidCombinations?.Any() == true && exceedsCapacity;
             // show tab name if there's anything to show
             if (showPerfect || showValid || showInvalid)
             {
