@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Serilog;
 using TehGM.PoE.QualityRecipesCalculator.Calculators;
@@ -11,7 +10,6 @@ namespace TehGM.PoE.QualityRecipesCalculator
     {
         private readonly IEnumerable<StashTab> _stashTabs;
         private readonly TerminalOptions _options;
-        private readonly Stopwatch _stopwatch;
 
         private readonly IRecipeCalculator _glassblowersBaubleCalculator;
         private readonly IRecipeCalculator _gemcuttersPrismCalculator;
@@ -20,7 +18,6 @@ namespace TehGM.PoE.QualityRecipesCalculator
         {
             this._stashTabs = stashTabs;
             this._options = options;
-            this._stopwatch = new Stopwatch();
 
             this._glassblowersBaubleCalculator = new GlassblowersBaubleRecipeCalculator();
             this._gemcuttersPrismCalculator = new GemcuttersPrismRecipeCalculator();

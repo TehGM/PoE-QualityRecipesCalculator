@@ -6,28 +6,31 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Serilog;
 using TehGM.PoE.QualityRecipesCalculator.Serialization;
-using TehGM.ConsoleProgressBar;
+using System;
 
 namespace TehGM.PoE.QualityRecipesCalculator
 {
     public class PoeHttpClient : HttpClient
     {
+        public ProcessStatus Status { get; }
+        public event EventHandler<ProcessStatus> StatusUpdated;
+
         public string AccountName { get; set; }
         public string Realm { get; set; } = "pc";
 
         public PoeHttpClient(string sessionID, string accountName, string userAgent = "TehGM's Vendor Recipe Helper")
             : base(new HttpClientHandler() { UseCookies = false } )
         {
-            DefaultRequestHeaders.Add("Cookie", $"POESESSID={sessionID}");
-            DefaultRequestHeaders.Add("User-Agent", userAgent);
-            AccountName = accountName;
+            base.DefaultRequestHeaders.Add("Cookie", $"POESESSID={sessionID}");
+            base.DefaultRequestHeaders.Add("User-Agent", userAgent);
+            this.AccountName = accountName;
+            this.Status = new ProcessStatus(null);
         }
 
         public async Task<IEnumerable<StashTab>> GetStashTabsAsync(string league, CancellationToken cancellationToken = default)
         {
-            ProgressBar progress = new ProgressBar("Downloading stash data...");
-            progress.Start();
-            progress.Update(0);
+            this.Status.MainText = "Downloading stash data...";
+            this.UpdateProgress(0, 100);
 
             // prepare request
             Log.Debug("Requesting stash tabs info for account {Account} in league {League}", AccountName, league);
@@ -52,12 +55,13 @@ namespace TehGM.PoE.QualityRecipesCalculator
             StashTab[] tabs = data["tabs"].ToObject<StashTab[]>(SerializationHelper.DefaultSerializer);
             for (int i = 0; i < tabs.Length; i++)
             {
-                progress.Update(i, tabs.Length);
+                this.UpdateProgress(i, tabs.Length);
                 StashTab tab = tabs[i];
                 JToken items = await GetStashTabContentsInternalAsync(league, tab.Index, cancellationToken).ConfigureAwait(false);
                 items.PopulateObject(tab);
             }
-            progress.Update(tabs.Length, tabs.Length, "Stash data download complete.");
+            this.Status.MainText = "Stash data download complete.";
+            this.UpdateProgress(tabs.Length, tabs.Length);
             Log.Verbose("Done parsing stash info");
             return tabs;
         }
@@ -90,6 +94,14 @@ namespace TehGM.PoE.QualityRecipesCalculator
             JObject data = JObject.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
             Log.Verbose("Done parsing stash tab items");
             return data;
+        }
+
+        private void UpdateProgress(int current, int max)
+        {
+            this.Status.MaxProgress = max;
+            this.Status.CurrentProgress = current;
+
+            this.StatusUpdated?.Invoke(this, this.Status);
         }
     }
 }

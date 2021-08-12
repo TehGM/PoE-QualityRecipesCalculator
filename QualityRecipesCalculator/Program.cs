@@ -6,6 +6,7 @@ using CommandLine;
 using CommandLine.Text;
 using Serilog;
 using Serilog.Events;
+using TehGM.ConsoleProgressBar;
 
 namespace TehGM.PoE.QualityRecipesCalculator
 {
@@ -42,7 +43,12 @@ namespace TehGM.PoE.QualityRecipesCalculator
                 try
                 {
                     stopwatch.Restart();
+                    ProgressBar progressBar = new ProgressBar();
+                    progressBar.Start();
+                    EventHandler<ProcessStatus> progressCallback = (sender, args) => progressBar.Update(args.CurrentProgress, args.MaxProgress, args.MainText);
+                    client.StatusUpdated += progressCallback;
                     tabs = await client.GetStashTabsAsync(options.League).ConfigureAwait(false);
+                    client.StatusUpdated -= progressCallback;
                     Log.Debug("Done downloading ({Time} ms)", stopwatch.ElapsedMilliseconds);
                 }
                 catch (Exception ex)
