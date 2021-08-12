@@ -57,7 +57,7 @@ namespace TehGM.PoE.QualityRecipesCalculator
                 // calculate and output results
                 try
                 {
-                    RecipesCalculator calculator = new RecipesCalculator(tabs, options);
+                    TerminalRecipesCalculator calculator = new TerminalRecipesCalculator(tabs, options);
 
                     stopwatch.Restart();
                     calculator.CheckGlassblowersBaubleRecipe();
