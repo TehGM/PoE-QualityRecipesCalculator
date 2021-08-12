@@ -13,10 +13,12 @@
     <RepositoryUrl>https://github.com/TehGM/PoE-QualityRecipesCalculator</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <Version>1.0.2</Version>
-    <PackageReleaseNotes>- Override window title to hide args and increase security.
-- Stop showing same qualities in different order as different combinations.
-- Added app icon.
-- Minor performance tweaks.</PackageReleaseNotes>
+    <PackageReleaseNotes>- Added a warning message when calculating a large batch of items. Defaults to &gt;= 20 items, configurable using --large flag.
+- Added some more info to --debug output.
+- Some minor performance tweaks.
+- Greatly reduced RAM usage when many valid items found in the same stash tab.
+- Fix crash when too many valid items found in the same stash tab.
+- Fix crash when item has more than 1 property with the same name template.</PackageReleaseNotes>
     <PackageIcon>icon.png</PackageIcon>
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <PackageTags>poe, pathofexile</PackageTags>
