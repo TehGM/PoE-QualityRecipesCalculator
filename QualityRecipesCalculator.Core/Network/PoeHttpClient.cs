@@ -10,7 +10,7 @@ using System;
 
 namespace TehGM.PoE.QualityRecipesCalculator
 {
-    public class PoeHttpClient : HttpClient
+    public class PoeHttpClient : HttpClient, IPoeClient
     {
         public ProcessStatus Status { get; }
         public event EventHandler<ProcessStatus> StatusUpdated;
