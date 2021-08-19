@@ -1,0 +1,9 @@
+﻿.accordion {
+    width: 100%;
+}
+
+.accordion-button {
+    $header-padding: 0.5rem;
+    padding-top: $header-padding;
+    padding-bottom: $header-padding;
+}

@@ -24,10 +24,14 @@ namespace TehGM.PoE.QualityRecipesCalculator
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(builder.Configuration, "Logging")
                 .CreateLogger();
+            Serilog.Debugging.SelfLog.Enable(m => Console.Error.WriteLine(m));
             builder.Logging.AddSerilog(Log.Logger, true);
+
+            builder.Services.Configure<LeaguesOptions>(builder.Configuration.GetSection("Leagues"));
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddScoped<IUserSettingsProvider, UserSettingsProvider>();
+            builder.Services.AddSingleton<ILeaguesProvider, LeaguesProvider>();
 
             await builder.Build().RunAsync();
         }

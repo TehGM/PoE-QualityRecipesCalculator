@@ -1,0 +1,32 @@
+﻿<div class="accordion" id="@this.ID">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="@this.ID-header">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#@this.ID-content" aria-expanded="false" aria-controls="@this.ID-content">
+                @this.Header
+            </button>
+        </h2>
+        <div id="@this.ID-content" class="accordion-collapse collapse" aria-labelledby="@this.ID-header" data-bs-parent="#@this.ID">
+            <div class="accordion-body">
+                @this.ChildContent
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string ID { get; set; }
+    [Parameter]
+    public string Header { get; set; } = "Tip!";
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        if (string.IsNullOrWhiteSpace(this.ID))
+            this.ID = $"tip-{Guid.NewGuid()}";
+    }
+}

@@ -1,0 +1,63 @@
+﻿@inject ILogger<SettingsDropdown> Log
+
+<button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">@this._currentValue</button>
+<ul class="dropdown-menu">
+    <li><a class="dropdown-item" @onclick="@((args) => this.OnItemSelectedAsync(null))">@_customText</a></li>
+    @foreach (string value in this.ValuesSet)
+    {
+        <li><a class="dropdown-item" @onclick="((args) => this.OnItemSelectedAsync(value))">@value</a></li>
+    }
+</ul>
+
+@code {
+    private const string _customText = "Custom...";
+    private string _currentValue;
+
+    [Parameter]
+    public IEnumerable<string> ValuesSet { get; set; }
+    [Parameter]
+    public string StartingValue { get; set; }
+
+    [Parameter]
+    public EventCallback<string> SelectionChanged { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        this.SelectItem(this.StartingValue, true);
+    }
+
+    private Task OnItemSelectedAsync(string value)
+    {
+        if (this._currentValue == value)
+            return Task.CompletedTask;
+
+        this.SelectItem(value, false);
+        return this.SelectionChanged.InvokeAsync(value);
+    }
+
+    public void OnUserInput(string value)
+    {
+        if (this._currentValue == value)
+            return;
+
+        this.SelectItem(value, true);
+    }
+
+    private void SelectItem(string value, bool runCheck)
+    {
+        if (runCheck)
+            value = this.ValuesSet.FirstOrDefault(v => v.Equals(value, StringComparison.OrdinalIgnoreCase));
+
+        if (this._currentValue == value)
+            return;
+
+        this.Log?.LogDebug("Changing dropdown value to {Value}", value);
+
+        if (string.IsNullOrWhiteSpace(value))
+            this._currentValue = _customText;
+        else
+            this._currentValue = value;
+        base.StateHasChanged();
+    }
+}

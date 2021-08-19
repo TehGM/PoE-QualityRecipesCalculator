@@ -1,1 +1,138 @@
 ﻿@page "/settings"
+@inject ILeaguesProvider LeaguesProvider
+
+<div id="sessionID" class="user-settings-property">
+    <div class="input-group">
+        <span class="input-group-text" id="sessionID-label">Session ID</span>
+        <input type="text" class="form-control" placeholder="PoE Session ID" aria-label="PoE Session ID" aria-describedby="sessionID-label" @oninput="this.OnSessionIdInput" />
+    </div>
+    <SettingsTip Header="Click here if you don't know how to find your PoE Session ID!">
+        A good guide can be found on <a href="http://www.vhpg.com/how-to-find-poe-session-id/">vhpg.com</a>.
+    </SettingsTip>
+</div>
+
+<div id="accountName" class="user-settings-property">
+    <div class="input-group">
+        <span class="input-group-text" id="accountName-label">Account Name</span>
+        <input type="text" class="form-control" placeholder="PoE Account Name" aria-label="PoE Account Name" aria-describedby="accountName-label" @oninput="this.OnAccountNameInput" />
+    </div>
+</div>
+
+<div id="league" class="user-settings-property input-group">
+    <div class="input-group">
+        <span class="input-group-text" id="league-label">League</span>
+        <SettingsDropdown SelectionChanged="OnLeagueSelected" ValuesSet="LeaguesProvider.GetLeaguesList()" StartingValue="@this._league" @ref="this._leaguePicker" />
+        <input type="text" class="form-control" placeholder="PoE League" aria-label="PoE League" aria-describedby="league-label" @oninput="this.OnLeagueInput" value="@this._league" />
+    </div>
+    <SettingsTip Header="Need hints regarding league name? Click here!">
+        <p>For flexibility (and independence on updates) @Program.ProgramName allows you to specify league name by yourself. However league name needs to follow the pattern expected by PoE API, which can be confusing at first.</p>
+        <ul>
+            <li>If you're playing non-league, use "Standard" as league name.</li>
+            <li>If you're playing league, use league name itself - for example "Expedition".</li>
+            <li>If you're playing Solo Self-Found add "SSF" in front of league name, for example "SSF Standard" or "SSF Expedition".</li>
+            <li>If you're playing non-league in hardcore mode, use "Hardcore" instead of standard. This also applies if if it's SSF, for example "SSF Hardcore".</li>
+            <li>If you're playing league in hardcore mode (but <b>NOT</b> SSF), put word "Hardcore" before league name, for example "Hardcore Expedition".</li>
+            <li>If you're playing league in both hardcore and SSF modes, put "SSF" in front of league name, and "HC" after league name, for example "SSF Expedition HC".</li>
+        </ul>
+    </SettingsTip>
+</div>
+
+<div id="realm" class="user-settings-property">
+    <div class="input-group">
+        <span class="input-group-text" id="realm-label">Platform</span>
+        <SettingsDropdown SelectionChanged="OnRealmSelected" ValuesSet="@(new string[] { "pc", "xbox", "sony" })" StartingValue="@this._realm" @ref="this._realmPicker" />
+        <input type="text" class="form-control" placeholder="PoE Platform" aria-label="PoE Platform" aria-describedby="realm-label" @oninput="this.OnRealmInput" value="@this._realm" />
+    </div>
+</div>
+
+<button class="btn btn-primary w-100 user-settings-property" type="button" @onclick="OnSave">Save</button>
+@if (this._saved)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        Your settings saved!
+    </div>
+}
+
+@code {
+    private string _sessionID;
+    private string _accountName;
+    private string _league;
+    private string _realm;
+
+    private bool _saved;
+
+    private SettingsDropdown _leaguePicker;
+    private SettingsDropdown _realmPicker;
+
+    protected override void OnInitialized()
+    {
+        UserSettings current = this.UserSettingsProvider.CurrentSettings;
+        this._sessionID = current.SessionID;
+        this._accountName = current.AccountName;
+        this._league = current.League;
+        this._realm = current.Realm;
+    }
+
+    private void OnLeagueSelected(string league)
+    {
+        if (league == null)
+            return;
+        this._league = league;
+        this.HideSavedConfirmation();
+    }
+
+    private void OnRealmSelected(string realm)
+    {
+        if (realm == null)
+            return;
+        this._realm = realm;
+        this.HideSavedConfirmation();
+    }
+
+    private void OnSessionIdInput(ChangeEventArgs e)
+    {
+        string value = e.Value.ToString();
+        this._sessionID = value;
+        this.HideSavedConfirmation();
+    }
+
+    private void OnAccountNameInput(ChangeEventArgs e)
+    {
+        string value = e.Value.ToString();
+        this._accountName = value;
+        this.HideSavedConfirmation();
+    }
+
+    private void OnLeagueInput(ChangeEventArgs e)
+    {
+        string value = e.Value.ToString();
+        this._league = value;
+        this._leaguePicker.OnUserInput(value);
+        this.HideSavedConfirmation();
+    }
+
+    private void OnRealmInput(ChangeEventArgs e)
+    {
+        string value = e.Value.ToString();
+        this._realm = value;
+        this._realmPicker.OnUserInput(value);
+        this.HideSavedConfirmation();
+    }
+
+    private void OnSave()
+    {
+        this.UserSettingsProvider.Update(settings =>
+        {
+            settings.AccountName = this._accountName;
+            settings.SessionID = this._sessionID;
+            settings.League = this._league;
+            settings.Realm = this._realm;
+        });
+        this._saved = true;
+    }
+
+    private void HideSavedConfirmation()
+    {
+        this._saved = false;
+    }
+}
