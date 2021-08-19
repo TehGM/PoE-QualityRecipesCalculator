@@ -45,4 +45,8 @@
     <ProjectReference Include="..\QualityRecipesCalculator.Core\QualityRecipesCalculator.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\lib\bootstrap\" />
+  </ItemGroup>
+
 </Project>
