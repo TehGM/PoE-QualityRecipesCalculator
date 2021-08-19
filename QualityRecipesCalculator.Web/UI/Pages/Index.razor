@@ -1,5 +1,20 @@
 ﻿@page "/"
 
-<h1>Hello, world!</h1>
+<p>TehGM's PoE Tools currently contains a calculator that checks your stash tab for items and tells you combinations that you can turn into <a href="https://pathofexile.fandom.com/wiki/Glassblower%27s_Bauble">Glassblower's Bauble</a> or <a href="https://pathofexile.fandom.com/wiki/Gemcutter%27s_Prism">Gemcutter's Prism </a> via vendor.</p>
 
-Welcome to your new app.
+@if (this.UserSettingsProvider.CurrentSettings.IsValid)
+{
+    <p>Go to <a href="/quality-recipe-calculator">Quality Recipe Calculator</a> to run the tool! You can also revisit your settings on <a href="/settings">Settings page</a>.</p>
+}
+else
+{
+    <p>You need to provide a few details before running the tool. Go to <a href="/settings">Settings page</a> to set everything up!</p>
+}
+
+<p>
+    Worried about providing your account details? I understand!
+    <br/>
+    But do not worry. @Program.ProgramName runs entirely in your browser, powered by <a href="https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor">Blazor</a>. No details are sent anywhere but the Path of Exile API servers!
+    <br/>
+    Still worried? You can check the entire source code on <a href="https://github.com/TehGM/PoE-QualityRecipesCalculator">GitHub</a>!
+</p>
