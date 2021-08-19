@@ -341,3 +341,7 @@ healthchecksdb
 
 # Development launch settings
 launchSettings.json
+
+# compiled CSS files
+*/wwwroot/css/**.css
+**.razor.css

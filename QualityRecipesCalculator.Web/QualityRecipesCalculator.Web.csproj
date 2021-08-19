@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <AssemblyName>QualityRecipesCalculator</AssemblyName>
+    <PackageId>TehGM.PoE.QualityRecipesCalculator.Web</PackageId>
+    <Authors>TehGM</Authors>
+    <Company>TehGM</Company>
+    <Product>Quality Recipes Calculator - Web App</Product>
+    <Copyright>Copyright (c) 2021 TehGM</Copyright>
+    <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/TehGM/PoE-QualityRecipesCalculator</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/TehGM/PoE-QualityRecipesCalculator</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>poe, pathofexile</PackageTags>
+    <RootNamespace>TehGM.PoE.QualityRecipesCalculator</RootNamespace>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageIconUrl />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\favicon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="wwwroot\favicon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Delegate.SassBuilder" Version="1.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.7" PrivateAssets="all" />
+    <PackageReference Include="Serilog" Version="2.10.0" />
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="4.1.2" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="3.2.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.0.0" />
+    <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\QualityRecipesCalculator.Core\QualityRecipesCalculator.Core.csproj" />
+  </ItemGroup>
+
+</Project>
