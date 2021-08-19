@@ -6,11 +6,11 @@ namespace TehGM.PoE.QualityRecipesCalculator.Calculators
 {
     public class GlassblowersBaubleRecipeCalculator : RecipeCalculatorBase, IRecipeCalculator
     {
-        public GlassblowersBaubleRecipeCalculator(ILogger<GlassblowersBaubleRecipeCalculator> log)
-            : base(log) { }
+        public GlassblowersBaubleRecipeCalculator(ICombinationsGenerator combinationsGenerator, ILogger<GlassblowersBaubleRecipeCalculator> log)
+            : base(combinationsGenerator, log) { }
 
         public GlassblowersBaubleRecipeCalculator()
-            : this(null) { }
+            : this(new CombinationsGenerator(), null) { }
 
         public override CalculationsResult Calculate(StashTab tab)
         {

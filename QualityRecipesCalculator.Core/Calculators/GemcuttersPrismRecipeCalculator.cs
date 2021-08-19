@@ -6,11 +6,11 @@ namespace TehGM.PoE.QualityRecipesCalculator.Calculators
 {
     public class GemcuttersPrismRecipeCalculator : RecipeCalculatorBase, IRecipeCalculator
     {
-        public GemcuttersPrismRecipeCalculator(ILogger<GemcuttersPrismRecipeCalculator> log)
-            : base(log) { }
+        public GemcuttersPrismRecipeCalculator(ICombinationsGenerator combinationsGenerator, ILogger<GemcuttersPrismRecipeCalculator> log)
+            : base(combinationsGenerator, log) { }
 
         public GemcuttersPrismRecipeCalculator()
-            : this(null) { }
+            : this(new CombinationsGenerator(), null) { }
 
         public override CalculationsResult Calculate(StashTab tab)
         {

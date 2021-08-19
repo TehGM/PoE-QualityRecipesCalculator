@@ -20,8 +20,9 @@ namespace TehGM.PoE.QualityRecipesCalculator
             this._stashTabs = stashTabs;
             this._options = options;
 
-            this._glassblowersBaubleCalculator = new GlassblowersBaubleRecipeCalculator(logFactory.CreateLogger<GlassblowersBaubleRecipeCalculator>());
-            this._gemcuttersPrismCalculator = new GemcuttersPrismRecipeCalculator(logFactory.CreateLogger<GemcuttersPrismRecipeCalculator>());
+            ICombinationsGenerator combinationsGenerator = new CombinationsGenerator();
+            this._glassblowersBaubleCalculator = new GlassblowersBaubleRecipeCalculator(combinationsGenerator, logFactory.CreateLogger<GlassblowersBaubleRecipeCalculator>());
+            this._gemcuttersPrismCalculator = new GemcuttersPrismRecipeCalculator(combinationsGenerator, logFactory.CreateLogger<GemcuttersPrismRecipeCalculator>());
         }
 
         public void CheckGlassblowersBaubleRecipe()

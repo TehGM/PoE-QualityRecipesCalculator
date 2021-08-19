@@ -19,10 +19,12 @@ namespace TehGM.PoE.QualityRecipesCalculator.Calculators
         public event EventHandler<IEnumerable<IEnumerable<KeyValuePair<Item, int>>>> PermutationsFound;
 
         protected ILogger Log { get; }
+        protected ICombinationsGenerator CombinationsGenerator { get; }
 
-        protected RecipeCalculatorBase(ILogger log)
+        protected RecipeCalculatorBase(ICombinationsGenerator combinationsGenerator, ILogger log)
         {
             this.Log = log;
+            this.CombinationsGenerator = combinationsGenerator;
         }
 
         public abstract CalculationsResult Calculate(StashTab tab);
@@ -37,7 +39,7 @@ namespace TehGM.PoE.QualityRecipesCalculator.Calculators
             // prepare qualities and combinations
             IReadOnlyDictionary<Item, int> qualities = RecipeCombination.ExtractItemQualities(items);
             this.Log?.LogTrace("Generating permutations");
-            IEnumerable<IEnumerable<KeyValuePair<Item, int>>> permutations = Permutator.GetCombinations(qualities, maxItems);
+            IEnumerable<IEnumerable<KeyValuePair<Item, int>>> permutations = this.CombinationsGenerator.GenerateCombinations(qualities, maxItems);
             this.Log?.LogTrace("Permutations generated in {Time} ms", this._stopwatch.ElapsedMilliseconds);
             this.PermutationsFound?.Invoke(this, permutations);
 
