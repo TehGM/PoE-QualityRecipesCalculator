@@ -46,7 +46,7 @@
 
     private void SelectItem(string value, bool runCheck)
     {
-        if (runCheck)
+        if (!string.IsNullOrWhiteSpace(value) && runCheck)
             value = this.ValuesSet.FirstOrDefault(v => v.Equals(value, StringComparison.OrdinalIgnoreCase));
 
         if (this._currentValue == value)
