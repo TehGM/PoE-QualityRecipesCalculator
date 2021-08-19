@@ -8,29 +8,39 @@ using TehGM.PoE.QualityRecipesCalculator.Serialization;
 using System;
 using Microsoft.Extensions.Logging;
 
-namespace TehGM.PoE.QualityRecipesCalculator
+namespace TehGM.PoE.QualityRecipesCalculator.Network
 {
     public class PoeHttpClient : HttpClient, IPoeClient
     {
-        public const string DefaultUserAgent = "TehGM's Vendor Recipe Helper";
-
         public ProcessStatus Status { get; }
         public event EventHandler<ProcessStatus> StatusUpdated;
 
-        public string AccountName { get; set; }
-        public string Realm { get; set; } = "pc";
+        public string AccountName { get; }
+        public string Realm { get; }
 
         private readonly ILogger _log;
 
-        public PoeHttpClient(string sessionID, string accountName, string userAgent = DefaultUserAgent)
-            : this(sessionID, accountName, userAgent, null) { }
+        public PoeHttpClient(PoeHttpClientOptions options)
+            : this(options, null) { }
 
-        public PoeHttpClient(string sessionID, string accountName, string userAgent, ILogger<PoeHttpClient> log)
+        public PoeHttpClient(PoeHttpClientOptions options, ILogger<PoeHttpClient> log)
             : base(new HttpClientHandler() { UseCookies = false })
         {
-            base.DefaultRequestHeaders.Add("Cookie", $"POESESSID={sessionID}");
-            base.DefaultRequestHeaders.Add("User-Agent", userAgent);
-            this.AccountName = accountName;
+            if (options == null)
+                throw new ArgumentNullException(nameof(options));
+            if (options.AccountName == null)
+                throw new ArgumentNullException(nameof(options.AccountName));
+            if (options.Realm == null)
+                throw new ArgumentNullException(nameof(options.Realm));
+            if (options.SessionID == null)
+                throw new ArgumentNullException(nameof(options.SessionID));
+            if (options.UserAgent == null)
+                throw new ArgumentNullException(nameof(options.UserAgent));
+
+            base.DefaultRequestHeaders.Add("Cookie", $"POESESSID={options.SessionID}");
+            base.DefaultRequestHeaders.Add("User-Agent", options.UserAgent);
+            this.AccountName = options.AccountName;
+            this.Realm = options.Realm;
             this.Status = new ProcessStatus(null);
             this._log = log;
         }

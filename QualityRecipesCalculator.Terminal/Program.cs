@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
 using TehGM.ConsoleProgressBar;
+using TehGM.PoE.QualityRecipesCalculator.Network;
 
 namespace TehGM.PoE.QualityRecipesCalculator
 {
@@ -38,13 +39,19 @@ namespace TehGM.PoE.QualityRecipesCalculator
                 Log.Information("League: {League}", options.League);
                 Log.Information("Realm: {Realm}", options.Realm);
 
-                // download all stash data
-                using PoeHttpClient client = new PoeHttpClient(options.SessionID, options.AccountName, 
-                    PoeHttpClient.DefaultUserAgent, logFactory.CreateLogger<PoeHttpClient>());
-                client.Realm = options.Realm;
                 IEnumerable<StashTab> tabs;
                 try
                 {
+                    // download all stash data
+                    PoeHttpClientOptions clientOptions = new PoeHttpClientOptions()
+                    {
+                        AccountName = options.AccountName,
+                        UserAgent = $"{PoeHttpClientOptions.DefaultUserAgent} - Terminal Version, v{GetVersion()}",
+                        Realm = options.Realm,
+                        SessionID = options.SessionID
+                    };
+                    using PoeHttpClient client = new PoeHttpClient(clientOptions, logFactory.CreateLogger<PoeHttpClient>());
+
                     stopwatch.Restart();
                     ProgressBar progressBar = new ProgressBar();
                     progressBar.Start();
@@ -91,6 +98,17 @@ namespace TehGM.PoE.QualityRecipesCalculator
                 Console.ReadLine();
             }
             Log.CloseAndFlush();
+        }
+
+        private static string GetVersion()
+        {
+            FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(typeof(Program).Assembly.Location);
+            if (!string.IsNullOrWhiteSpace(versionInfo.ProductVersion))
+                return versionInfo.ProductVersion;
+            string result = $"{versionInfo.FileMajorPart}.{versionInfo.FileMinorPart}.{versionInfo.FileBuildPart}";
+            if (versionInfo.FilePrivatePart != 0)
+                result += $".{versionInfo.FilePrivatePart}";
+            return result;
         }
 
         private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
