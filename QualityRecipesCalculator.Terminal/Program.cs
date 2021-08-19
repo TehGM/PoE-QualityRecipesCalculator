@@ -46,7 +46,7 @@ namespace TehGM.PoE.QualityRecipesCalculator
                     PoeHttpClientOptions clientOptions = new PoeHttpClientOptions()
                     {
                         AccountName = options.AccountName,
-                        UserAgent = $"{PoeHttpClientOptions.DefaultUserAgent} - Terminal Version, v{GetVersion()}",
+                        UserAgent = $"{PoeHttpClientOptions.DefaultUserAgent} - Terminal v{GetVersion()}",
                         Realm = options.Realm,
                         SessionID = options.SessionID
                     };
