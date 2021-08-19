@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace TehGM.PoE.QualityRecipesCalculator
 {
@@ -18,6 +19,10 @@ namespace TehGM.PoE.QualityRecipesCalculator
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<UI.App>("#app");
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(builder.Configuration, "Logging")
+                .CreateLogger();
+            builder.Logging.AddSerilog(Log.Logger, true);
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
