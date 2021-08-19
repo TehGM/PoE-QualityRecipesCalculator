@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using Newtonsoft.Json;
 
-namespace TehGM.PoE.QualityRecipesCalculator
+namespace TehGM.PoE
 {
     [DebuggerDisplay("PoE " + nameof(StashTab) + ": {ToString(),nq}")]
     public class StashTab

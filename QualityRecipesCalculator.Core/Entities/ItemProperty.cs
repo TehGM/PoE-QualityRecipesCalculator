@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace TehGM.PoE.QualityRecipesCalculator
+namespace TehGM.PoE
 {
     public class ItemProperty
     {

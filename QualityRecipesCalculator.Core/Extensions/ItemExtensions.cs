@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace TehGM.PoE.QualityRecipesCalculator
+namespace TehGM.PoE
 {
     public static class ItemExtensions
     {

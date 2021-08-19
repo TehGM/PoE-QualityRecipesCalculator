@@ -1,4 +1,4 @@
-﻿namespace TehGM.PoE.QualityRecipesCalculator
+﻿namespace TehGM.PoE
 {
     public static class PoeRealmNames
     {

@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
-using TehGM.PoE.QualityRecipesCalculator.Serialization;
+using TehGM.PoE.Serialization;
 using System;
 using Microsoft.Extensions.Logging;
 
