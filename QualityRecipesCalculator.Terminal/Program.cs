@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using CommandLine;
 using CommandLine.Text;
+using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
 using TehGM.ConsoleProgressBar;
@@ -27,6 +28,7 @@ namespace TehGM.PoE.QualityRecipesCalculator
                         : LogEventLevel.Information)
                     .CreateLogger();
                 AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
+                ILoggerFactory logFactory = new LoggerFactory().AddSerilog(Log.Logger);
 
                 Log.Information(HeadingInfo.Default);
                 Log.Information(CopyrightInfo.Default);
@@ -37,7 +39,8 @@ namespace TehGM.PoE.QualityRecipesCalculator
                 Log.Information("Realm: {Realm}", options.Realm);
 
                 // download all stash data
-                using PoeHttpClient client = new PoeHttpClient(options.SessionID, options.AccountName);
+                using PoeHttpClient client = new PoeHttpClient(options.SessionID, options.AccountName, 
+                    PoeHttpClient.DefaultUserAgent, logFactory.CreateLogger<PoeHttpClient>());
                 client.Realm = options.Realm;
                 IEnumerable<StashTab> tabs;
                 try
@@ -63,7 +66,7 @@ namespace TehGM.PoE.QualityRecipesCalculator
                 // calculate and output results
                 try
                 {
-                    TerminalRecipesCalculator calculator = new TerminalRecipesCalculator(tabs, options);
+                    TerminalRecipesCalculator calculator = new TerminalRecipesCalculator(tabs, options, logFactory);
 
                     stopwatch.Restart();
                     calculator.CheckGlassblowersBaubleRecipe();

@@ -1,11 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace TehGM.PoE.QualityRecipesCalculator.Calculators
 {
     public class GemcuttersPrismRecipeCalculator : RecipeCalculatorBase, IRecipeCalculator
     {
+        public GemcuttersPrismRecipeCalculator(ILogger<GemcuttersPrismRecipeCalculator> log)
+            : base(log) { }
+
+        public GemcuttersPrismRecipeCalculator()
+            : this(null) { }
+
         public override CalculationsResult Calculate(StashTab tab)
         {
             base.Status = new ProcessStatus("Checking for Gemcutter's Prism recipe (Gems)");
@@ -20,7 +26,7 @@ namespace TehGM.PoE.QualityRecipesCalculator.Calculators
             if (!items.Any())
                 return new CalculationsResult(tab, DefaultTargetQuality);
             base.UpdateSubStatus($"Found {items.Count()} valid items in tab {tab.Name}, checking qualities");
-            Log.Debug("Found {Count} valid items in tab {TabName}, checking qualities", items.Count(), tab.Name);
+            base.Log?.LogDebug("Found {Count} valid items in tab {TabName}, checking qualities", items.Count(), tab.Name);
             return base.CheckRecipe(items, tab, DefaultMaxItems, DefaultTargetQuality);
         }
     }

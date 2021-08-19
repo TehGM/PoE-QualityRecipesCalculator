@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace TehGM.PoE.QualityRecipesCalculator.Calculators
 {
@@ -18,6 +18,13 @@ namespace TehGM.PoE.QualityRecipesCalculator.Calculators
         public event EventHandler<IEnumerable<Item>> ItemsFound;
         public event EventHandler<IEnumerable<IEnumerable<KeyValuePair<Item, int>>>> PermutationsFound;
 
+        protected ILogger Log { get; }
+
+        protected RecipeCalculatorBase(ILogger log)
+        {
+            this.Log = log;
+        }
+
         public abstract CalculationsResult Calculate(StashTab tab);
 
         protected CalculationsResult CheckRecipe(IEnumerable<Item> items, StashTab tab, int maxItems = DefaultMaxItems, int targetQuality = DefaultTargetQuality)
@@ -29,13 +36,13 @@ namespace TehGM.PoE.QualityRecipesCalculator.Calculators
 
             // prepare qualities and combinations
             IReadOnlyDictionary<Item, int> qualities = RecipeCombination.ExtractItemQualities(items);
-            Log.Verbose("Generating permutations");
+            this.Log?.LogTrace("Generating permutations");
             IEnumerable<IEnumerable<KeyValuePair<Item, int>>> permutations = Permutator.GetCombinations(qualities, maxItems);
-            Log.Verbose("Permutations generated in {Time} ms", this._stopwatch.ElapsedMilliseconds);
+            this.Log?.LogTrace("Permutations generated in {Time} ms", this._stopwatch.ElapsedMilliseconds);
             this.PermutationsFound?.Invoke(this, permutations);
 
             // calculate total quality of each combination
-            Log.Verbose("Calculating combinations");
+            this.Log?.LogTrace("Calculating combinations");
             int count = 0;
             int total = permutations.Count();
             this.UpdateProgress(count, total);
@@ -59,7 +66,7 @@ namespace TehGM.PoE.QualityRecipesCalculator.Calculators
 
             this._stopwatch.Stop();
             this.UpdateProgress(total, total);
-            Log.Verbose("Done checking stash tab {TabName} ({Time} ms)", tab.Name, this._stopwatch.ElapsedMilliseconds);
+            this.Log?.LogTrace("Done checking stash tab {TabName} ({Time} ms)", tab.Name, this._stopwatch.ElapsedMilliseconds);
 
             return new CalculationsResult(tab, targetQuality,
                 perfectCombinations, validCombinations, invalidCombinations);

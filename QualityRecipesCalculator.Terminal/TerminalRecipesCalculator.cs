@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 using Serilog;
 using TehGM.PoE.QualityRecipesCalculator.Calculators;
 
@@ -14,13 +15,13 @@ namespace TehGM.PoE.QualityRecipesCalculator
         private readonly IRecipeCalculator _glassblowersBaubleCalculator;
         private readonly IRecipeCalculator _gemcuttersPrismCalculator;
 
-        public TerminalRecipesCalculator(IEnumerable<StashTab> stashTabs, TerminalOptions options)
+        public TerminalRecipesCalculator(IEnumerable<StashTab> stashTabs, TerminalOptions options, ILoggerFactory logFactory)
         {
             this._stashTabs = stashTabs;
             this._options = options;
 
-            this._glassblowersBaubleCalculator = new GlassblowersBaubleRecipeCalculator();
-            this._gemcuttersPrismCalculator = new GemcuttersPrismRecipeCalculator();
+            this._glassblowersBaubleCalculator = new GlassblowersBaubleRecipeCalculator(logFactory.CreateLogger<GlassblowersBaubleRecipeCalculator>());
+            this._gemcuttersPrismCalculator = new GemcuttersPrismRecipeCalculator(logFactory.CreateLogger<GemcuttersPrismRecipeCalculator>());
         }
 
         public void CheckGlassblowersBaubleRecipe()

@@ -4,27 +4,35 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
-using Serilog;
 using TehGM.PoE.QualityRecipesCalculator.Serialization;
 using System;
+using Microsoft.Extensions.Logging;
 
 namespace TehGM.PoE.QualityRecipesCalculator
 {
     public class PoeHttpClient : HttpClient, IPoeClient
     {
+        public const string DefaultUserAgent = "TehGM's Vendor Recipe Helper";
+
         public ProcessStatus Status { get; }
         public event EventHandler<ProcessStatus> StatusUpdated;
 
         public string AccountName { get; set; }
         public string Realm { get; set; } = "pc";
 
-        public PoeHttpClient(string sessionID, string accountName, string userAgent = "TehGM's Vendor Recipe Helper")
-            : base(new HttpClientHandler() { UseCookies = false } )
+        private readonly ILogger _log;
+
+        public PoeHttpClient(string sessionID, string accountName, string userAgent = DefaultUserAgent)
+            : this(sessionID, accountName, userAgent, null) { }
+
+        public PoeHttpClient(string sessionID, string accountName, string userAgent, ILogger<PoeHttpClient> log)
+            : base(new HttpClientHandler() { UseCookies = false })
         {
             base.DefaultRequestHeaders.Add("Cookie", $"POESESSID={sessionID}");
             base.DefaultRequestHeaders.Add("User-Agent", userAgent);
             this.AccountName = accountName;
             this.Status = new ProcessStatus(null);
+            this._log = log;
         }
 
         public async Task<IEnumerable<StashTab>> GetStashTabsAsync(string league, CancellationToken cancellationToken = default)
@@ -33,7 +41,7 @@ namespace TehGM.PoE.QualityRecipesCalculator
             this.UpdateProgress(0, 100);
 
             // prepare request
-            Log.Debug("Requesting stash tabs info for account {Account} in league {League}", AccountName, league);
+            this._log?.LogDebug("Requesting stash tabs info for account {Account} in league {League}", AccountName, league);
             Dictionary<string, object> query = new Dictionary<string, object>(5)
             {
                 { "accountName", this.AccountName },
@@ -50,7 +58,7 @@ namespace TehGM.PoE.QualityRecipesCalculator
             response.EnsureSuccessStatusCode();
 
             // read content
-            Log.Verbose("Parsing stash info");
+            this._log?.LogTrace("Parsing stash info");
             JObject data = JObject.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
             StashTab[] tabs = data["tabs"].ToObject<StashTab[]>(SerializationHelper.DefaultSerializer);
             for (int i = 0; i < tabs.Length; i++)
@@ -62,7 +70,7 @@ namespace TehGM.PoE.QualityRecipesCalculator
             }
             this.Status.MainText = "Stash data download complete.";
             this.UpdateProgress(tabs.Length, tabs.Length);
-            Log.Verbose("Done parsing stash info");
+            this._log?.LogTrace("Done parsing stash info");
             return tabs;
         }
 
@@ -72,7 +80,7 @@ namespace TehGM.PoE.QualityRecipesCalculator
         private async Task<JToken> GetStashTabContentsInternalAsync(string league, int index, CancellationToken cancellationToken = default)
         {
             // prepare request
-            Log.Debug("Requesting stash tab {Index} for account {Account} in league {League}", index, AccountName, league);
+            this._log?.LogDebug("Requesting stash tab {Index} for account {Account} in league {League}", index, AccountName, league);
             Dictionary<string, object> query = new Dictionary<string, object>(5)
             {
                 { "accountName", this.AccountName },
@@ -90,9 +98,9 @@ namespace TehGM.PoE.QualityRecipesCalculator
             response.EnsureSuccessStatusCode();
 
             // read content
-            Log.Verbose("Parsing stash tab items");
+            this._log?.LogTrace("Parsing stash tab items");
             JObject data = JObject.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
-            Log.Verbose("Done parsing stash tab items");
+            this._log?.LogTrace("Done parsing stash tab items");
             return data;
         }
 
