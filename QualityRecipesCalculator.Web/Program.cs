@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using TehGM.PoE.QualityRecipesCalculator.Settings;
+using TehGM.PoE.QualityRecipesCalculator.Settings.Services;
 
 namespace TehGM.PoE.QualityRecipesCalculator
 {
@@ -25,6 +27,7 @@ namespace TehGM.PoE.QualityRecipesCalculator
             builder.Logging.AddSerilog(Log.Logger, true);
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddScoped<IUserSettingsProvider, UserSettingsProvider>();
 
             await builder.Build().RunAsync();
         }
