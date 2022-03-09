@@ -12,13 +12,9 @@
     <Copyright>Copyright (c) 2021 TehGM</Copyright>
     <RepositoryUrl>https://github.com/TehGM/PoE-QualityRecipesCalculator</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>1.0.2</Version>
-    <PackageReleaseNotes>- Added a warning message when calculating a large batch of items. Defaults to &gt;= 20 items, configurable using --large flag.
-- Added some more info to --debug output.
-- Some minor performance tweaks.
-- Greatly reduced RAM usage when many valid items found in the same stash tab.
-- Fix crash when too many valid items found in the same stash tab.
-- Fix crash when item has more than 1 property with the same name template.</PackageReleaseNotes>
+    <Version>1.0.3</Version>
+    <PackageReleaseNotes>- Added support for gem and flask stash tabs.
+	</PackageReleaseNotes>
     <PackageIcon>icon.png</PackageIcon>
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <PackageTags>poe, pathofexile</PackageTags>
