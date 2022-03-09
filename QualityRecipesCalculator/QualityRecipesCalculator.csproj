@@ -12,11 +12,9 @@
     <Copyright>Copyright (c) 2021 TehGM</Copyright>
     <RepositoryUrl>https://github.com/TehGM/PoE-QualityRecipesCalculator</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>1.0.1</Version>
-    <PackageReleaseNotes>- Override window title to hide args and increase security.
-- Stop showing same qualities in different order as different combinations.
-- Added app icon.
-- Minor performance tweaks.</PackageReleaseNotes>
+    <Version>1.0.3</Version>
+    <PackageReleaseNotes>- Added support for gem and flask stash tabs.
+	</PackageReleaseNotes>
     <PackageIcon>icon.png</PackageIcon>
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <PackageTags>poe, pathofexile</PackageTags>
@@ -36,6 +34,10 @@
     <PackageReference Include="Serilog" Version="2.10.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="TehGM.ConsoleProgressBar" Version="1.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
 
 </Project>

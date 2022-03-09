@@ -37,7 +37,9 @@ namespace TehGM.PoE.QualityRecipesCalculator
             EssenceStash,
             DeliriumStash,
             DelveStash,
-            UniqueStash
+            UniqueStash,
+            GemStash,
+            FlaskStash
         }
 
         public override string ToString()
