@@ -66,7 +66,7 @@ namespace TehGM.PoE.QualityRecipesCalculator
             this._stopwatch.Restart();
 
             // prepare qualities and combinations
-            IReadOnlyDictionary<Item, int> qualities = RecipeCombination.ExtractItemQualities(items);
+            IDictionary<Item, int> qualities = RecipeCombination.ExtractItemQualities(items);
             Log.Verbose("Generating permutations");
             IEnumerable<IEnumerable<KeyValuePair<Item, int>>> permutations = Permutator.GetCombinations(qualities, requirements.MaxItems);
 
@@ -82,8 +82,10 @@ namespace TehGM.PoE.QualityRecipesCalculator
 
             // calculate total quality of each combination
             Log.Verbose("Calculating combinations");
-            foreach (IEnumerable<KeyValuePair<Item, int>> sequence in permutations)
+            int lastIter = permutations.Count();
+            for (int iter = 0; iter < lastIter; iter++)
             {
+                IEnumerable<KeyValuePair<Item, int>> sequence = permutations.ElementAt(iter);
                 RecipeCombination combination = RecipeCombination.Calculate(sequence, requirements.TargetQuality);
 
                 // determine if set should be shown
@@ -92,8 +94,8 @@ namespace TehGM.PoE.QualityRecipesCalculator
                 if ((!_options.ShowInvalid || exceedsCapacity) && combination.TotalQuality < requirements.TargetQuality)
                     continue;
 
-                // ensure this set wasn't already calculated, based just on items qualities
-                if (!alreadyDone.Add(combination))
+                // ensure this set wasn't already calculated if not removing used combinations, based just on items qualities
+                if (!_options.RemoveUsed && !alreadyDone.Add(combination))
                     continue;
 
                 // for the first item in set, notify user what tab it's in
@@ -117,6 +119,27 @@ namespace TehGM.PoE.QualityRecipesCalculator
                 if (_options.ShowItemNames)
                     Console.Write($" ({string.Join(", ", combination.Items)})");
                 Console.WriteLine();
+
+                if (_options.RemoveUsed)
+                {
+                    Log.Verbose("Removing used qualities");
+                    foreach (int quality in combination.Qualities)
+                    {
+                        foreach (KeyValuePair<Item, int> qualItem in qualities)
+                        {
+                            if (quality == qualItem.Value)
+                            {
+                                qualities.Remove(qualItem);
+                                break;
+                            }
+                        }
+                    }
+                    Log.Verbose("Generating new permutations");
+                    permutations = Permutator.GetCombinations(qualities, requirements.MaxItems);
+
+                    iter--;
+                    lastIter = permutations.Count();
+                }
             }
 
             Log.Verbose("Done checking stash tab {TabName} ({Time} ms)", tab.Name, this._stopwatch.ElapsedMilliseconds);

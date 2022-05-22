@@ -39,7 +39,7 @@ namespace TehGM.PoE.QualityRecipesCalculator
         public static RecipeCombination Calculate(IEnumerable<Item> items, int targetQuality = 40)
             => Calculate(ExtractItemQualities(items), targetQuality);
 
-        public static IReadOnlyDictionary<Item, int> ExtractItemQualities(IEnumerable<Item> items)
+        public static IDictionary<Item, int> ExtractItemQualities(IEnumerable<Item> items)
         {
             Dictionary<Item, int> results = new Dictionary<Item, int>(items.Count());
 
