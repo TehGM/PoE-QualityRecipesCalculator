@@ -39,12 +39,18 @@ namespace TehGM.PoE.QualityRecipesCalculator
         public static RecipeCombination Calculate(IEnumerable<Item> items, int targetQuality = 40)
             => Calculate(ExtractItemQualities(items), targetQuality);
 
-        public static IReadOnlyDictionary<Item, int> ExtractItemQualities(IEnumerable<Item> items)
+        public static IDictionary<Item, int> ExtractItemQualities(IEnumerable<Item> items)
         {
             Dictionary<Item, int> results = new Dictionary<Item, int>(items.Count());
+            int debugCount = 0;
 
             foreach (Item i in items)
             {
+                debugCount++;
+                if (debugCount % 1000 == 0)
+                {
+                    Serilog.Log.Debug("{xThousand}k qualities extracted", debugCount / 1000);
+                }
                 if (!i.TryGetProperty("Quality", out ItemProperty prop))
                     throw new ArgumentException($"Item {i} has no quality property", nameof(items));
                 results.Add(i, int.Parse(prop.Values.First().TrimStart('+').TrimEnd('%')));

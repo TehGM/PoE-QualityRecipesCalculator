@@ -66,24 +66,40 @@ namespace TehGM.PoE.QualityRecipesCalculator
             this._stopwatch.Restart();
 
             // prepare qualities and combinations
-            IReadOnlyDictionary<Item, int> qualities = RecipeCombination.ExtractItemQualities(items);
+            IDictionary<Item, int> qualities = RecipeCombination.ExtractItemQualities(items);
             Log.Verbose("Generating permutations");
             IEnumerable<IEnumerable<KeyValuePair<Item, int>>> permutations = Permutator.GetCombinations(qualities, requirements.MaxItems);
 
-            // track already done just to reduce spam in output
+            Log.Verbose("Creating hashset to keep track of valid combinations");
+            // track already done to reduce spam in output
             HashSet<RecipeCombination> alreadyDone = new HashSet<RecipeCombination>();
+            Log.Verbose("Created hashset!");
             // only output tab name the first time
             bool tabNameShown = false;
             // skip showing invalid if capacity is exceeded
-            bool exceedsCapacity = permutations.LongCount() > int.MaxValue / 2;
+            //bool exceedsCapacity = permutations.LongCount() > int.MaxValue / 2;
+            bool exceedsCapacity = true;
+            Log.Verbose("Checking if exceeds capacity");
             if (exceedsCapacity && _options.ShowInvalid)
+            {
+                Log.Verbose("Exceeds capacity!");
                 Log.Warning("Possible combinations count exceed capacity - logging of invalid combinations will be disabled");
+            }
             Log.Verbose("Permutations generated in {Time} ms", this._stopwatch.ElapsedMilliseconds);
 
             // calculate total quality of each combination
             Log.Verbose("Calculating combinations");
-            foreach (IEnumerable<KeyValuePair<Item, int>> sequence in permutations)
+
+            Log.Verbose("Total of {PermutationCount} permutations; {IntMax} is IntMax", permutations.LongCount(), int.MaxValue);
+            int lastIter = permutations.Count();
+            for (int iter = 0; iter < lastIter; iter++)
             {
+                /*
+                if ((iter + 1) % 1000 == 0)
+                    Log.Verbose("Calculated {xThousand}k combinations..", iter / 1000);
+                */
+                Log.Verbose($"Combination {iter}");
+                IEnumerable<KeyValuePair<Item, int>> sequence = permutations.ElementAt(iter);
                 RecipeCombination combination = RecipeCombination.Calculate(sequence, requirements.TargetQuality);
 
                 // determine if set should be shown
@@ -92,8 +108,8 @@ namespace TehGM.PoE.QualityRecipesCalculator
                 if ((!_options.ShowInvalid || exceedsCapacity) && combination.TotalQuality < requirements.TargetQuality)
                     continue;
 
-                // ensure this set wasn't already calculated, based just on items qualities
-                if (!alreadyDone.Add(combination))
+                // ensure this set wasn't already calculated if not removing used combinations, based just on items qualities
+                if (!_options.RemoveUsed && !alreadyDone.Add(combination))
                     continue;
 
                 // for the first item in set, notify user what tab it's in
@@ -117,6 +133,27 @@ namespace TehGM.PoE.QualityRecipesCalculator
                 if (_options.ShowItemNames)
                     Console.Write($" ({string.Join(", ", combination.Items)})");
                 Console.WriteLine();
+
+                if (_options.RemoveUsed)
+                {
+                    Log.Verbose("Removing used qualities");
+                    foreach (int quality in combination.Qualities)
+                    {
+                        foreach (KeyValuePair<Item, int> qualItem in qualities)
+                        {
+                            if (quality == qualItem.Value)
+                            {
+                                qualities.Remove(qualItem);
+                                break;
+                            }
+                        }
+                    }
+                    Log.Verbose("Generating new permutations");
+                    permutations = Permutator.GetCombinations(qualities, requirements.MaxItems);
+
+                    iter--;
+                    lastIter = permutations.Count();
+                }
             }
 
             Log.Verbose("Done checking stash tab {TabName} ({Time} ms)", tab.Name, this._stopwatch.ElapsedMilliseconds);
@@ -130,6 +167,7 @@ namespace TehGM.PoE.QualityRecipesCalculator
             if (!_options.OnlyExact)
                 message += ", consider running with --only-exact flag - might improve performance by about 30%";
             Log.Warning(message, itemsCount, tabName);
+            return;
         }
     }
 }
